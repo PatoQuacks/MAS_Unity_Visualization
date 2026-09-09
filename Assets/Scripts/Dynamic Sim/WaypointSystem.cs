@@ -16,7 +16,9 @@ public class WaypointSystem : MonoBehaviour
         }
         else
         {
-            return transform.GetChild(0);
+            // This point should never be reached due to movement system logic
+            // but just in case return a null
+            return null; 
         }
     }
 
