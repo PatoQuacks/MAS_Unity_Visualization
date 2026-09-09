@@ -33,7 +33,7 @@ public class ProductManager : MonoBehaviour
         {
             // Creates the prefab and sets it as a child of the object running this script
             GameObject newProduct = Instantiate(productPrefab, transform);
-            newProduct.transform.localPosition = Vector3.zero;
+            newProduct.transform.localPosition = new Vector3(0f,-2f,0f);
             newProduct.name = productName;
             /*
             // Set the # of the product in model
