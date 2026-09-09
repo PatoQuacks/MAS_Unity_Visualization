@@ -174,4 +174,5 @@ MonoBehaviour:
   waypoints: {fileID: 0}
   moveSpeed: 5
   distanceThreshold: 0.1
-  amountwaypoints: 0
+  amountWaypoints: 0
+  waitTime: 0.2

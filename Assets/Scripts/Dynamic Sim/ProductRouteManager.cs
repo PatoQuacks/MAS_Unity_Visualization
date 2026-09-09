@@ -4,6 +4,39 @@ public class ProductRouteManager : MonoBehaviour
 {
     [SerializeField] private GameObject waypointsPrefab;
     private float[][][] positionList;
+    private float[][][] rackRanges =
+    {
+        //Rack #1
+        new float[][]
+        {
+            new float[]{4f,10f},
+            new float[]{4f,5f}
+        },
+        //Rack #2
+        new float[][]
+        {
+            new float[]{4f,10f},
+            new float[]{13f,14f}
+        },
+        //Rack #3
+        new float[][]
+        {
+            new float[]{14f,15f},
+            new float[]{6f,12f}
+        },
+        //Rack #4
+        new float[][]
+        {
+            new float[]{12f,14f},
+            new float[]{0f,0f}
+        },
+        //Rack #5
+        new float[][]
+        {
+            new float[]{5f,7f},
+            new float[]{19f,19f}
+        },
+    };
 
     // Retrieval of data needed to generate paths
     void OnEnable()
@@ -46,7 +79,18 @@ public class ProductRouteManager : MonoBehaviour
         {
             GameObject waypoint = new GameObject($"waypoint_#{i}");
             waypoint.transform.SetParent(_productWaypoints.transform);
-            waypoint.transform.localPosition = new Vector3(_productPositions[i][0], 0f, _productPositions[i][1]);
+            float yPos = 0.5f;
+            for (int r = 0; r < rackRanges.Length; r++)
+            {
+                float[] xRange = rackRanges[r][0];
+                float[] zRange = rackRanges[r][1];
+                if (xRange[0] <= _productPositions[i][0] && _productPositions[i][0] <= xRange[1] && 
+                        zRange[0] <= _productPositions[i][1] && _productPositions[i][1] <= zRange[1])
+                        {
+                            yPos = 0.22f;
+                        }
+            }
+            waypoint.transform.localPosition = new Vector3(_productPositions[i][0], yPos, _productPositions[i][1]);
         }
     }
 }

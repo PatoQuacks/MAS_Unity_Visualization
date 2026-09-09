@@ -95,4 +95,3 @@ MonoBehaviour:
   amountWaypoints: 0
   stepsBeforeSpawn: 0
   waitTime: 0.2
-  rackPositionY: 0.22

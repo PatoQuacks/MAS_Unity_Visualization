@@ -14,7 +14,7 @@ public class WaypointMovement : MonoBehaviour
     [SerializeField] private float distanceThreshold = 0.1f;
 
     [SerializeField] private int amountWaypoints;
-    [SerializeField] private float waitTime = 0.2f;
+    [SerializeField] private float waitTime = 1f;
 
     private Transform currentWaypoint;
     private Vector3 previousPosition;

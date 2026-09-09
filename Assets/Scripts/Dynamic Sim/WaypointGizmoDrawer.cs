@@ -45,15 +45,15 @@ public class WaypointGizmoDrawer : MonoBehaviour
         {
             Gizmos.color = waypointColor;
             if(j == positions.Length - 1){Gizmos.color = finalWaypointColor;}
-            Vector3 point = new Vector3(positions[j][0], 0f, positions[j][1]);
+            Vector3 point = new Vector3(positions[j][0], 0.5f, positions[j][1]);
             Gizmos.DrawSphere(point, waypointRadius);
         }
 
         Gizmos.color = lineColor;
         for (int j = 0; j < positions.Length - 1; j++)
         {
-            Vector3 from = new Vector3(positions[j][0], 0f, positions[j][1]);
-            Vector3 to = new Vector3(positions[j + 1][0], 0f, positions[j + 1][1]);
+            Vector3 from = new Vector3(positions[j][0], 0.5f, positions[j][1]);
+            Vector3 to = new Vector3(positions[j + 1][0], 0.5f, positions[j + 1][1]);
             Gizmos.DrawLine(from, to);
         }
     }

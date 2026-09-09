@@ -16,13 +16,45 @@ public class ProductMovement : MonoBehaviour
     [SerializeField] private int stepsBeforeSpawn;
     [SerializeField] private float waitTime = 0.2f;
 
-    [SerializeField] private float rackPositionY = 0.22f;
-
     private Transform currentWaypoint;
     private Vector3 previousPosition;
 
     private bool isPaused = false;
     private bool isSpawned = false;
+
+    private float[][][] rackRanges =
+    {
+        //Rack #1
+        new float[][]
+        {
+            new float[]{4f,10f},
+            new float[]{4f,5f}
+        },
+        //Rack #2
+        new float[][]
+        {
+            new float[]{4f,10f},
+            new float[]{13f,14f}
+        },
+        //Rack #3
+        new float[][]
+        {
+            new float[]{14f,15f},
+            new float[]{6f,12f}
+        },
+        //Rack #4
+        new float[][]
+        {
+            new float[]{12f,14f},
+            new float[]{0f,0f}
+        },
+        //Rack #5
+        new float[][]
+        {
+            new float[]{5f,7f},
+            new float[]{19f,19f}
+        },
+    };
 
     void Start()
     {
@@ -52,6 +84,11 @@ public class ProductMovement : MonoBehaviour
 
     private void moveProduct()
     {
+        if (exitsRack())
+        {
+            transform.position = currentWaypoint.position;
+        }
+
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, moveSpeed * Time.deltaTime);
         if (Vector3.Distance(transform.position, currentWaypoint.position) < distanceThreshold)
         {
@@ -62,7 +99,9 @@ public class ProductMovement : MonoBehaviour
                 transform.LookAt(currentWaypoint);
             }
         }
+        
     }
+
 
     // Initial setup
     private void setWaypointSystem()
@@ -119,5 +158,33 @@ public class ProductMovement : MonoBehaviour
 
         setInitialPath(); 
         isSpawned = true;
+    }
+
+    // Functions to do snap movement when Agent picks them up
+    private bool exitsRack()
+    {
+        for (int r = 0; r < rackRanges.Length; r++)
+            {
+                float[] xRange = rackRanges[r][0];
+                float[] zRange = rackRanges[r][1];
+                if (wasInRack(xRange, zRange) && willExitRack(xRange, zRange))
+                    {
+                        Debug.Log("Box exits rack");
+                        return true;
+                    }
+            } 
+        return false;
+    }
+
+    private bool wasInRack(float[]xRange, float[] zRange)
+    {
+        return xRange[0] <= previousPosition[0] && previousPosition[0] <= xRange[1]
+                && zRange[0] <= previousPosition[2] && previousPosition[2] <= zRange[1];
+    }
+
+    private bool willExitRack(float[]xRange, float[] zRange)
+    {
+        return !(xRange[0] <= currentWaypoint.position[0] && currentWaypoint.position[0] <= xRange[1]
+                && zRange[0] <= currentWaypoint.position[2] && currentWaypoint.position[2] <= zRange[1]);
     }
 }
