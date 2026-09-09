@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4587916532995520428, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4587916532995520428, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.22
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4587916532995520428, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4587916532995520428, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
       propertyPath: m_LocalRotation.w
@@ -67,5 +67,32 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3810148002973527318, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2252618592299519532}
   m_SourcePrefab: {fileID: 100100000, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
+--- !u!1 &1217961576311890223 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3810148002973527318, guid: 2507e3391f9d5f443b26d889334d12ec, type: 3}
+  m_PrefabInstance: {fileID: 2596128313286298681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2252618592299519532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217961576311890223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afdfb62747ba52e42a4a6b0cf33bb8c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProductMovement
+  waypoints: {fileID: 0}
+  moveSpeed: 5
+  distanceThreshold: 0.1
+  amountWaypoints: 0
+  stepsBeforeSpawn: 0
+  waitTime: 0.2
+  rackPositionY: 0.22

@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class WaypointMovement : MonoBehaviour
+public class ProductMovement : MonoBehaviour
 {
-
     // Store a ref to the waypoint system to be used
     [SerializeField] private WaypointSystem waypoints;
 
@@ -14,24 +13,29 @@ public class WaypointMovement : MonoBehaviour
     [SerializeField] private float distanceThreshold = 0.1f;
 
     [SerializeField] private int amountWaypoints;
+    [SerializeField] private int stepsBeforeSpawn;
     [SerializeField] private float waitTime = 0.2f;
+
+    [SerializeField] private float rackPositionY = 0.22f;
 
     private Transform currentWaypoint;
     private Vector3 previousPosition;
 
     private bool isPaused = false;
+    private bool isSpawned = false;
 
     void Start()
     {
         setWaypointSystem();
-        setInitialPath();        
+        setStepsBeforeSpawn();
+        StartCoroutine(SpawnRoutine(stepsBeforeSpawn));    
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Stop movement if the AGV is paused, or reached the final position
-        if (isPaused || currentWaypoint.GetSiblingIndex() + 1 == amountWaypoints){
+        // Stop movement if the Product isn't spawned yet, paused, or reached the final position
+        if (!isSpawned ||isPaused || currentWaypoint.GetSiblingIndex() + 1 == amountWaypoints){
             return;
         }
 
@@ -42,11 +46,11 @@ public class WaypointMovement : MonoBehaviour
             return;
         }
 
-        moveAgent();
+        moveProduct();
 
     }
 
-    private void moveAgent()
+    private void moveProduct()
     {
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, moveSpeed * Time.deltaTime);
         if (Vector3.Distance(transform.position, currentWaypoint.position) < distanceThreshold)
@@ -63,9 +67,9 @@ public class WaypointMovement : MonoBehaviour
     // Initial setup
     private void setWaypointSystem()
     {
-        GameObject routeManager = GameObject.Find("Simulator Manager/Route Manager");
-        Transform agentWaypoints = routeManager.transform.GetChild(transform.GetSiblingIndex());
-        waypoints = agentWaypoints.GetComponent<WaypointSystem>();
+        GameObject routeManager = GameObject.Find("Simulator Manager/Product Route Manager");
+        Transform productWaypoints = routeManager.transform.GetChild(transform.GetSiblingIndex());
+        waypoints = productWaypoints.GetComponent<WaypointSystem>();
         amountWaypoints = waypoints.GetAmountWaypoints();
     }
 
@@ -79,8 +83,17 @@ public class WaypointMovement : MonoBehaviour
         transform.LookAt(currentWaypoint);
     }
 
+    // Function will provide in which step the product arrives, making it fit with simulation movement
+    private void setStepsBeforeSpawn()
+    {
+        GameObject agentRouteManager = GameObject.Find("Simulator Manager/Product Route Manager");
+        Transform agentWaypoints = agentRouteManager.transform.GetChild(0);
+        int amountOfSteps = agentWaypoints.GetComponent<WaypointSystem>().GetAmountWaypoints(); // Amount of steps from first agent (spawned since first step) 
+        stepsBeforeSpawn = amountOfSteps - amountWaypoints; // Difference between agent's steps (spawned from step 0) and products steps 
+    }
 
-    // Pause movement when agent is in same spot
+
+    // Pause movement when product is in same spot
     private void PauseForTime(float duration)
     {
         StartCoroutine(PauseRoutine(duration));
@@ -95,5 +108,16 @@ public class WaypointMovement : MonoBehaviour
 
         currentWaypoint = waypoints.GetNextWaypoint(currentWaypoint);
         isPaused = false; 
+    }
+
+    // Pause initialization of path when product hasn't arrived
+    private IEnumerator SpawnRoutine(int steps)
+    {
+        Debug.Log($"Entered wait for {transform.name} to spawn");
+        // Wait for X seconds before continuing
+        yield return new WaitForSeconds(steps*waitTime);  
+
+        setInitialPath(); 
+        isSpawned = true;
     }
 }
