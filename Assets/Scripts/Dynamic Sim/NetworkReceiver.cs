@@ -6,12 +6,19 @@ using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
 using UnityEngine;
-public class AgentPositionsPayload
+public class ObjectPositionsPayload
 {
     public List<Agent> agents;
+    public List<Product> products;
 }
 
 public class Agent
+{
+    public string id;
+    public List<float[]> positions;
+}
+
+public class Product
 {
     public string id;
     public List<float[]> positions;
@@ -25,6 +32,9 @@ public class NetworkReceiver : MonoBehaviour
 
     public static event Action<string[]> OnAgentListReceived;
     public static event Action<float[][][]> OnAgentPositionListReceived;
+
+    public static event Action<string[]> OnProductListReceived;
+    public static event Action<float[][][]> OnProductPositionListReceived;
 
     // Requiered attributes for the reading and handling of data sent by MAS simulator
     private HttpListener listener;
@@ -94,19 +104,30 @@ public class NetworkReceiver : MonoBehaviour
     {
         try
         {        
-            AgentPositionsPayload data = JsonConvert.DeserializeObject<AgentPositionsPayload>(json);
+            ObjectPositionsPayload data = JsonConvert.DeserializeObject<ObjectPositionsPayload>(json);
 
             // Extract agent IDs
             string[] agentList = data.agents.Select(agent => agent.id).ToArray();
 
             // Extract positions
-            float[][][] positionList = data.agents.Select(agent => agent.positions.ToArray()).ToArray();
+            float[][][] agentPositionList = data.agents.Select(agent => agent.positions.ToArray()).ToArray();
             
             Debug.Log($"Received data for {agentList.Length} agents.");
 
+            // Extract product IDs
+            string[] productList = data.products.Select(product => product.id).ToArray();
+
+            // Extract positions
+            float[][][] productPositionList = data.products.Select(product => product.positions.ToArray()).ToArray();
+            
+            Debug.Log($"Received data for {productList.Length} products.");
+
             // Handoff data to scripts subscribed to this event
             OnAgentListReceived?.Invoke(agentList);
-            OnAgentPositionListReceived?.Invoke(positionList);
+            OnAgentPositionListReceived?.Invoke(agentPositionList);
+            
+            OnProductListReceived?.Invoke(productList);
+            OnProductPositionListReceived?.Invoke(productPositionList);
         }
         catch (Exception e)
         {
